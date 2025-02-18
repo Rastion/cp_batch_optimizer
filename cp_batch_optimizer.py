@@ -36,8 +36,10 @@ class ConstraintProgrammingBatchOptimizer(BaseOptimizer):
         status = solver.Solve(model)
         
         if status in [cp_model.OPTIMAL, cp_model.FEASIBLE]:
-            print(cp_model.OPTIMAL,cp_model.FEASIBLE)
-            print(f"Solver status: {status}")
+            if status == cp_model.OPTIMAL:
+                print(f"Solver found the optimal solution")
+            else:
+                print("Solver found a feasible solution")
             return self._extract_solution(solver, problem, task_intervals)
         return problem.random_solution(), float('inf')
 
