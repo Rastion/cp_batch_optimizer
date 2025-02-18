@@ -122,26 +122,26 @@ class ConstraintProgrammingBatchOptimizer(BaseOptimizer):
             
             for start, end, task in sorted_batches:
                 if start >= current_end:
-                    # New batch
+                    # New batch: add the previous batch if exists
                     if current_batch:
                         batch_schedule.append({
                             'resource': resource,
-                            'tasks': current_batch,
+                            'tasks': [task_tuple[2] for task_tuple in current_batch],
                             'start': current_batch[0][0],
-                            'end': current_end
+                            'end': current_batch[-1][1]
                         })
-                    current_batch = [task]
+                    current_batch = [(start, end, task)]
                     current_end = end
                 else:
-                    # Add to current batch
-                    current_batch.append(task)
+                    # Continue current batch by appending the entire tuple
+                    current_batch.append((start, end, task))
                     current_end = max(current_end, end)
             
-            # Add last batch
+            # Add last batch if any
             if current_batch:
                 batch_schedule.append({
                     'resource': resource,
-                    'tasks': current_batch,
+                    'tasks': [task_tuple[2] for task_tuple in current_batch],
                     'start': current_batch[0][0],
                     'end': current_end
                 })
