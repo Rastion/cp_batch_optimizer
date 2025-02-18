@@ -78,20 +78,24 @@ class ConstraintProgrammingBatchOptimizer(BaseOptimizer):
         
         for (resource, type_), tasks in batch_groups.items():
             capacity = problem.capacity[resource]
-            batches = set(var for _, var in tasks)
-            
-            # Batch capacity constraints
-            for batch in batches:
-                in_batch = [model.NewBoolVar(f'in_batch_{batch}_{t}') 
-                           for t, var in tasks]
-                for (t, var), var_in in zip(tasks, in_batch):
-                    model.Add(var == batch).OnlyEnforceIf(var_in)
-                    model.Add(var != batch).OnlyEnforceIf(var_in.Not())
+            # Instead of using a set of variables, iterate over possible batch indices.
+            for b in range(problem.nb_tasks + 1):
+                in_batch = []
+                for t, var in tasks:
+                    # Create a boolean variable that is True if task t is assigned batch b.
+                    bool_var = model.NewBoolVar(f'in_batch_{b}_{t}')
+                    model.Add(var == b).OnlyEnforceIf(bool_var)
+                    model.Add(var != b).OnlyEnforceIf(bool_var.Not())
+                    in_batch.append(bool_var)
+                # Enforce that the number of tasks assigned to batch b is at most the capacity.
                 model.Add(sum(in_batch) <= capacity)
             
-            # Batch type consistency
+            # (Optional) If additional type consistency constraints are needed,
+            # make sure they're correctly formulated. The following line might be redundant
+            # if each `var` is already the corresponding element in `batch_vars`.
             for t, var in tasks:
                 model.Add(var == batch_vars[t])
+
 
     def _add_precedence_constraints(self, model, problem, intervals):
         """Add task precedence constraints"""
