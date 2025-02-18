@@ -1,0 +1,21 @@
+{
+    "entry_point": "cp_batch_optimizer:ConstraintProgrammingBatchOptimizer",
+    "default_params": {
+        "time_limit": 300,
+        "num_search_workers": 4
+    },
+    "optimizer_type": "ConstraintProgramming",
+    "description": "Advanced constraint programming optimizer using OR-Tools CP-SAT solver. Features parallel search and efficient constraint modeling.",
+    "compatible_problems": ["BatchScheduling"],
+    "parameters": {
+        "time_limit": {
+            "type": "int",
+            "description": "Maximum optimization time in seconds"
+        },
+        "num_search_workers": {
+            "type": "int",
+            "description": "Number of parallel search threads"
+        }
+    },
+    "requirements": ["ortools, qubots, collections"]
+}
