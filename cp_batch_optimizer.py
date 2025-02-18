@@ -25,8 +25,9 @@ class ConstraintProgrammingBatchOptimizer(BaseOptimizer):
         
         # Set objective
         makespan = model.NewIntVar(0, problem.time_horizon, 'makespan')
-        model.AddMaxEquality(makespan, [interval.EndExpr() for interval in task_intervals])
+        model.AddMaxEquality(makespan, [entry['interval'].EndExpr() for entry in task_intervals])
         model.Minimize(makespan)
+
         
         # Solve and return
         solver = cp_model.CpSolver()
