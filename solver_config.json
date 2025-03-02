@@ -4,9 +4,11 @@
         "time_limit": 300,
         "num_search_workers": 4
     },
-    "optimizer_type": "ConstraintProgramming",
+    "creator": "Rastion",
+    "type": "optimizer",
+    "optimizer_name": "CP-SAT batch scheduling optimizer",
     "description": "Advanced constraint programming optimizer using OR-Tools CP-SAT solver. Features parallel search and efficient constraint modeling.",
-    "compatible_problems": ["BatchScheduling"],
+    "compatible_problems": ["Rastion/batch_scheduling"],
     "parameters": {
         "time_limit": {
             "type": "int",
@@ -17,5 +19,10 @@
             "description": "Number of parallel search threads"
         }
     },
-    "requirements": ["ortools, qubots, collections"]
+    "requirements": ["ortools, qubots, collections"],
+    "keywords": [
+      "exact",
+      "CP-SAT",
+      "ortools"
+    ]
 }
